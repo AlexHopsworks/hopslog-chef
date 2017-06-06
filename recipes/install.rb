@@ -1,3 +1,5 @@
+setup_aws()
+
 group node.hopslog.group do
   action :create
   not_if "getent group #{node.hopslog.group}"
