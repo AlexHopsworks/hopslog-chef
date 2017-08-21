@@ -67,11 +67,13 @@ if node.logstash.systemd == "true"
     owner "root"
     group "root"
     mode 0754
+if node.services.enabled == "true"
     notifies :enable, resources(:service => service_name)
-    notifies :start, resources(:service => service_name), :immediately
+end
+    notifies :restart, resources(:service => service_name)
   end
 
-  kagent_config "reload_logstash_daemon" do
+  kagent_config service_name do
     action :systemd_reload
   end  
 
@@ -97,7 +99,7 @@ end
 
 if node.kagent.enabled == "true" 
    kagent_config service_name do
-     service service_name
+     service "ELK"
      log_file "#{node.logstash.base_dir}/logstash.log"
    end
 end

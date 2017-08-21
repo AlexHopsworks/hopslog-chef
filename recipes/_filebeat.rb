@@ -71,11 +71,13 @@ if node.filebeat.systemd == "true"
     owner "root"
     group "root"
     mode 0754
+if node.services.enabled == "true"
     notifies :enable, resources(:service => service_name)
-    notifies :start, resources(:service => service_name), :immediately
+end
+    notifies :restart, resources(:service => service_name)
   end
 
-  kagent_config "reload_filebeat_daemon" do
+  kagent_config service_name do
     action :systemd_reload
   end  
 
@@ -100,11 +102,9 @@ end
 
 
 if node.kagent.enabled == "true" 
-   # kagent_config "filebeat" do
-   #   service "filebeat"
-   #   log_file "#{node.filebeat.base_dir}/log/filebeat.log"
-   # end
+   kagent_config service_name do
+     service "ELK"
+     log_file "#{node.filebeat.base_dir}/log/filebeat.log"
+   end
 end
-
-
 
